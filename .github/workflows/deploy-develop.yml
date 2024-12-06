@@ -1,0 +1,65 @@
+name: 360hub-frontend-pay-dev
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  build-and-deploy:
+    environment: dev
+    name: Setup, Build, and Deploy
+    runs-on: ubuntu-latest
+    env:
+      NODE_ENV: dev
+      VITE_NODE_ENV: dev
+      VITE_BASE_URL: ${{ secrets.VITE_BASE_URL_DEV }}
+      VITE_BASE_SALE_URL: ${{ secrets.VITE_BASE_SALE_URL_DEV }}
+      VITE_PUBLIC_TOKEN_GALAXY_PAY_DEV_AND_STAGING: ${{ secrets.VITE_PUBLIC_TOKEN_GALAXY_PAY_DEV_AND_STAGING }}
+
+    # run pipeline;
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+      #- run: npm ci
+      #- run: npm test
+
+      - name: Yarn CI
+        run: yarn install --frozen-lockfile
+
+      - name: Install Serverless Framework
+        run: yarn global add serverless@3.8
+
+      - name: Serverless AWS authentication
+        run: sls config credentials --provider aws --key ${{ secrets.AWS_KEY }} --secret ${{ secrets.AWS_SECRET }}
+
+      - name: Create env file
+        run: |
+          cat > .env << EOF
+          ${{ secrets.ENV }}
+          EOF
+          sed '/AWS_REGION.*/d' .env >> env_tmp
+          sed '/AWS_SECRET.*/d' .env >> env_tmp
+          sed '/AWS_KEY.*/d' .env >> env_tmp
+          mv env_tmp .env
+
+      - name: view the secrets context
+        shell: bash
+        run: echo "$SECRETS_CONTEXT"
+        env:
+          SECRETS_CONTEXT: ${{ toJson(secrets) }}
+
+      - name: Install Yarn dependencies
+        run: yarn
+
+      - name: Exclude build
+        run: rm -Rf dist
+
+      - name: Build Project
+        run: yarn build
+
+      - name: Deploy
+        run: |
+          sls deploy --stage dev --param "cert=arn:aws:acm:us-east-1:974609723172:certificate/9c593178-bcdc-4cc0-b218-0e99fa138a99" --param "hosted-zone-id=Z03920093G2NCHPXWKWQ0" --param "domain=pay-dev.360h.com.br" --param "raw-domain=360h.com.br"
