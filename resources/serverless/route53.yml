@@ -10,4 +10,4 @@ Resources:
           Fn::GetAtt:
             - CloudFrontDistribution
             - DomainName
-        HostedZoneId: Z2FDTNDATAQYW2 #${self:custom.hostedZoneId}
+        HostedZoneId: ${self:custom.hostedZoneId}
