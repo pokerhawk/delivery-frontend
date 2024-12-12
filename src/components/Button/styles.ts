@@ -1,81 +1,106 @@
-import styled, { css, keyframes } from "styled-components";
-import { ButtonVariant } from ".";
+import { darken } from 'polished'
+import styled, { DefaultTheme, css } from 'styled-components'
 
-const loadingSpinner = keyframes`
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-`;
+import { ButtonProps } from '.'
 
-type ButtonProps = {
-  variant: ButtonVariant;
-};
+export type WrapperProps = {
+  hasIcon: boolean
+} & Pick<ButtonProps, 'fullWidth' | 'minimal' | 'color'>
 
-const buttonModifiers = {
-  normal: () => css`
-    padding: 16px 60px;
-    border: none;
-    border-radius: 7px;
+export const wrapperModifiers = {
+  fullWidth: () => css`
     width: 100%;
+  `,
 
-    background: #12B76A;
-    border: 1px solid #027A48;
-    box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05);
-    border-radius: 8px;
+  withIcon: (theme: DefaultTheme) => css`
+    svg,
+    img {
+      width: 1.5rem;
+      & + span {
+        margin-left: ${theme.spacings.xxsmall};
+      }
+    }
+  `,
 
-    text-transform: uppercase;
-    font-style: normal;
+  minimal: (theme: DefaultTheme) => css`
+    background: none;
+    color: ${theme.colors.aquaBlue};
+    text-transform: none;
+    letter-spacing: normal;
     font-weight: 600;
-    letter-spacing: 1.5px;
-    font-size: 16px;
+    font-size: 14px;
     line-height: 12px;
-    line-height: normal;
-
-    color: #ffffff;
-    transition: filter 0.2s linear;
-
+    background: none;
+    padding: 0;
+    min-height: fit-content;
     &:hover {
-      cursor: pointer;
-      filter: brightness(0.8);
+      color: ${darken(0.1, theme.colors.aquaBlue)};
     }
+  `,
 
+  disabled: () => css`
     &:disabled {
-      opacity: 0.4;
       cursor: not-allowed;
-    }
-
-    svg {
-      animation: ${loadingSpinner} 1s linear infinite;
+      filter: saturate(30%);
     }
   `,
-  new: () => css`
+
+  primary: () => css`
+    background-position: 100% 0%;
+    background-size: 200% 1%;
+    background: linear-gradient(273.49deg, #61abd8 -4.65%, #2e6cb1 104.76%);
+    color: #ffffff;
+  `,
+
+  gray: () => css`
+    background: #bdbdbd;
+  `
+}
+
+export const Wrapper = styled.button<WrapperProps>`
+  ${({ theme, fullWidth, hasIcon, minimal, disabled, color }) => css`
+    align-items: center;
+    border-radius: 10px;
+    border: 0;
+    color: ${theme.colors.white};
     cursor: pointer;
-    font: normal 600 1.4rem Inter, "sans-serif";
-    color: #fff;
-
-    display: flex;
+    display: inline-flex;
+    font-size: 12px;
+    font-weight: 600;
     justify-content: center;
-    align-items: center;
-    padding: 0.8rem 1.4rem;
-    gap: 8px;
-    width: 100%;
-
-    background: #2e90fa;
-    border: 1px solid #1570ef;
-    box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05);
-    border-radius: 8px;
-  `,
-};
-
-export const Button = styled.button<ButtonProps>`
-  ${({ variant }) => css`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    ${!!variant && buttonModifiers[variant]}
+    letter-spacing: 2px;
+    line-height: 12px;
+    min-height: 58px;
+    padding: 15px 36px;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: background 0.3s ease-in-out;
+    position: relative;
+    outline: none;
+    &:hover {
+      background-position: 0% 0%;
+    }
+    ${!!fullWidth && wrapperModifiers.fullWidth()};
+    ${!!hasIcon && wrapperModifiers.withIcon(theme)};
+    ${color && wrapperModifiers[color]};
+    ${!!minimal && wrapperModifiers.minimal(theme)};
+    ${disabled && wrapperModifiers.disabled()};
   `}
-`;
+`
+
+export const WrapperText = styled.div<{ isLoading: boolean }>`
+  ${({ isLoading }) => css`
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    transition:
+      transform 0.2s ease 0s,
+      opacity 0.2s ease 0s;
+    ${isLoading &&
+    css`
+      transform: translateY(12px) scale(0.75);
+      opacity: 0;
+    `}
+  `}
+`

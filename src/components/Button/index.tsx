@@ -1,23 +1,49 @@
-import { ButtonHTMLAttributes, ReactNode } from 'react'
-import { FaSpinner } from 'react-icons/fa'
+import { AnchorHTMLAttributes, ButtonHTMLAttributes, forwardRef } from 'react'
+
 import * as S from './styles'
 
-export type ButtonVariant = 'normal' | 'new'
+import LoadingIcon from '../../assets/icons/Loading'
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  children: ReactNode
+type ButtonTypes =
+  | AnchorHTMLAttributes<HTMLAnchorElement>
+  | ButtonHTMLAttributes<HTMLButtonElement>
+
+export type ButtonProps = {
+  fullWidth?: boolean
+  minimal?: boolean
+  icon?: JSX.Element
   isLoading?: boolean
-  variant?: ButtonVariant
-}
+  as?: React.ElementType
+  color?: 'primary' | 'gray'
+} & ButtonTypes
 
-function Button({ children, isLoading = false, variant = 'normal', ...props }: ButtonProps) {
-  return (
-    <S.Button disabled={isLoading} variant={variant} {...props}>
-      {isLoading ? (
-        <FaSpinner size={12} />
-      ) : children}
-    </S.Button>
-  )
-}
+const Button: React.ForwardRefRenderFunction<S.WrapperProps, ButtonProps> = (
+  {
+    children,
+    icon,
+    fullWidth = false,
+    minimal = false,
+    isLoading = false,
+    color = 'primary',
+    ...props
+  },
+  ref
+) => (
+  <S.Wrapper
+    fullWidth={fullWidth}
+    hasIcon={!!icon}
+    minimal={minimal}
+    isLoading={isLoading}
+    color={color}
+    ref={ref}
+    {...props}
+  >
+    {isLoading && <LoadingIcon isLoading={isLoading} />}
+    <S.WrapperText isLoading={isLoading}>
+      {icon}
+      {!!children && <span>{children}</span>}
+    </S.WrapperText>
+  </S.Wrapper>
+)
 
-export default Button;
+export default forwardRef(Button)

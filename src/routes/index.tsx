@@ -1,45 +1,34 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "../pages/Login";
-import SignUp from "../pages/SignUp";
+import Register from "../pages/Register";
 import ErrorPage from "../pages/404";
-import { MarketplaceCheckout } from "../pages/MarketplaceCheckout";
-import { ExternalCheckout } from "../pages/ExternalCheckout";
-import Feedback from "../pages/Feedback";
-import { ProductProvider } from "../hooks/useProduct";
-import { SaleProvider } from "../hooks/useSale";
-import { ScheduledDeliveryCheckout } from "../pages/ScheduledDeliveryCheckout";
+// import Feedback from "../pages/Feedback";
+// import { ScheduledDeliveryCheckout } from "../pages/ScheduledDeliveryCheckout";
 import ProtectedRoute from "./ProtectedRouter";
 
 function Router() {
   return (
-    <ProductProvider>
-      <SaleProvider>
-        <BrowserRouter>
-          <Routes>
-            {/* Unprotected Routes */}
+    <BrowserRouter>
+      <Routes>
+        {/* Unprotected Routes */}
 
-            <Route path='/register' element={<SignUp />} />
-            <Route path='/login' element={<Login />} />
-            <Route path="/404" element={<ErrorPage />} />
-            <Route path="*" element={<ErrorPage />} />
+        <Route path='/register' element={<Register />} />
+        <Route path='/login' element={<Login />} />
+        <Route path="/404" element={<ErrorPage />} />
+        <Route path="*" element={<ErrorPage />} />
 
-            {/* Protected Routes */}
+        {/* Protected Routes */}
 
-            <Route path='/:type/:id' element={
-              <ProtectedRoute>
-                <ErrorPage />
-              </ProtectedRoute>
-            }/>
+        <Route path='/:type/:id' element={
+          <ProtectedRoute>
+            <ErrorPage />
+          </ProtectedRoute>
+        }/>
 
-            {/* <Route path="/feedback" element={<Feedback />} />
-            <Route path="/externo/:saleId" element={<ExternalCheckout />} />
-            <Route path="/marketplace/:affiliationCode" element={<MarketplaceCheckout />} />
-            <Route path="/:affiliationCode" element={<MarketplaceCheckout />} />
-            <Route path="/scheduledDelivery/:affiliationCode" element={<ScheduledDeliveryCheckout />} /> */}
-          </Routes>
-        </BrowserRouter>
-      </SaleProvider>
-    </ProductProvider>
+        {/* <Route path="/feedback" element={<Feedback />} /> */}
+        {/* <Route path="/scheduledDelivery/:affiliationCode" element={<ScheduledDeliveryCheckout />} /> */}
+      </Routes>
+    </BrowserRouter>
   );
 }
 
