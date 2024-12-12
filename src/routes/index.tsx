@@ -8,6 +8,7 @@ import Feedback from "../pages/Feedback";
 import { ProductProvider } from "../hooks/useProduct";
 import { SaleProvider } from "../hooks/useSale";
 import { ScheduledDeliveryCheckout } from "../pages/ScheduledDeliveryCheckout";
+import ProtectedRoute from "./ProtectedRouter";
 
 function Router() {
   return (
@@ -15,15 +16,26 @@ function Router() {
       <SaleProvider>
         <BrowserRouter>
           <Routes>
+            {/* Unprotected Routes */}
+
+            <Route path='/register' element={<SignUp />} />
+            <Route path='/login' element={<Login />} />
             <Route path="/404" element={<ErrorPage />} />
-            <Route path="/feedback" element={<Feedback />} />
+            <Route path="*" element={<ErrorPage />} />
+
+            {/* Protected Routes */}
+
+            <Route path='/:type/:id' element={
+              <ProtectedRoute>
+                <ErrorPage />
+              </ProtectedRoute>
+            }/>
+
+            {/* <Route path="/feedback" element={<Feedback />} />
             <Route path="/externo/:saleId" element={<ExternalCheckout />} />
             <Route path="/marketplace/:affiliationCode" element={<MarketplaceCheckout />} />
             <Route path="/:affiliationCode" element={<MarketplaceCheckout />} />
-            <Route path="/scheduledDelivery/:affiliationCode" element={<ScheduledDeliveryCheckout />} />
-            <Route path="*" element={<ErrorPage />} />
-            <Route path='/login' element={<Login />} />
-            <Route path='/register' element={<SignUp />} />
+            <Route path="/scheduledDelivery/:affiliationCode" element={<ScheduledDeliveryCheckout />} /> */}
           </Routes>
         </BrowserRouter>
       </SaleProvider>

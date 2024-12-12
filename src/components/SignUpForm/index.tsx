@@ -1,19 +1,17 @@
 import { Link, useNavigate } from "react-router-dom";
 import Button from "../Button";
-import FormHeader from "../FormHeader";
 import InputStringField from "../InputStringField";
 import * as S from './styles';
 import { yupResolver } from "@hookform/resolvers/yup";
 import { ReactNode, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from 'yup';
-import AlertIcon from "../../assets/images/icons/AlertIcon";
-import HelpIcon from "../../assets/images/icons/HelpIcon";
-import MailIcon from "../../assets/images/icons/MailIcon";
+import AlertIcon from "../../assets/icons/AlertIcon";
+import HelpIcon from "../../assets/icons/HelpIcon";
+import MailIcon from "../../assets/icons/MailIcon";
 import { signUpRequest } from "../../services/auth";
 import CheckboxInput from "../CheckboxInput";
 import SelectTag from "../Dropdown";
-import { getBusiness } from "../../services/business";
 import Toastify from '../../components/Toastify/Toastify';
 import { notify } from "../../utils/Toast/notify";
 
@@ -56,10 +54,10 @@ const SignUpForm = () => {
         resolver: yupResolver(registerSchema)
     });
 
-    const getAllBusiness = async () =>{
-        const response = await getBusiness();
-        setBusiness(response);
-    }
+    // const getAllBusiness = async () =>{
+    //     const response = await getBusiness();
+    //     setBusiness(response);
+    // }
 
     const signUp = async ({ name, email, password, pix }: InputProps) => {
         const response = await signUpRequest({ email, name, password, accountType, pix, businessId });
@@ -70,16 +68,14 @@ const SignUpForm = () => {
     const companies = business.map(prop=>prop.company)
 
     useEffect(() => {
-        getAllBusiness();
+        // getAllBusiness();
     }, [])
 
     return (
         <S.FormWrapper>
             <Toastify position='top-right' theme='light' displayTime={2500}/>
             <S.Form onSubmit={handleSubmit(signUp)}>
-                <S.HeaderWrapper>
-                    <FormHeader title="Cadastro" subtitle="Insira as informações" />
-                </S.HeaderWrapper>
+                {/*HEADER*/}
                 <S.InternalFormWrapper>
                     <S.CheckboxWrapper>
                         <CheckboxInput
@@ -176,7 +172,7 @@ const SignUpForm = () => {
                         }
                     </S.InputWrapper>
                     <S.ButtonWrapper>
-                        <Button socialButton>Cadastrar</Button>
+                        {/* <Button socialButton>Cadastrar</Button> */}
                     </S.ButtonWrapper>
                 </S.InternalFormWrapper>
                 <S.SignInOptionWrapper>
