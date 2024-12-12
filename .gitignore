@@ -37,3 +37,4 @@ vite.config.ts.timestamp-*
 # Else
 yarn.lock
 package-lock.json
+serverless.yml

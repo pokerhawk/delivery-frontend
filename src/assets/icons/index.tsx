@@ -1,5 +1,6 @@
-import MailIcon from "../../assets/icons/MailIcon";
+import MailIcon from "../../assets/images/icons/MailIcon";
 import Button from "../Button";
+import FormHeader from "../FormHeader";
 import InputStringField from "../InputStringField";
 import * as S from './styles';
 import { useForm } from "react-hook-form";
@@ -7,10 +8,10 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import * as yup from 'yup'
 import { yupResolver } from "@hookform/resolvers/yup";
-import AlertIcon from "../../assets/icons/AlertIcon";
+import AlertIcon from "../../assets/images/icons/AlertIcon";
 import { useState } from "react";
-import EyeIcon from "../../assets/icons/EyeIcon";
-import EyeOffIcon from "../../assets/icons/EyeOffIcon";
+import EyeIcon from "../../assets/images/icons/EyeIcon";
+import EyeOffIcon from "../../assets/images/icons/EyeOffIcon";
 import Toastify from "../Toastify/Toastify";
 import { notify } from "../../utils/Toast/notify";
 
@@ -45,7 +46,10 @@ const SignInForm = () => {
         <S.Wrapper>
             <Toastify position='top-right' theme='light' displayTime={2500}/>
             <S.HeaderWrapper>
-            {/* HEADER */}
+                <FormHeader
+                    title={"Entre com sua conta"}
+                    subtitle={"Faça seu login"}
+                />
             </S.HeaderWrapper>
             <S.Form onSubmit={handleLogin}>
                 <S.InputFormWrapper>
@@ -67,7 +71,7 @@ const SignInForm = () => {
                         inputError={errors.password ? true : false}
                         {...register('password')}
                     />
-                    <Button variant="normal" type="submit">Login</Button>
+                    <Button socialButton type="submit">Login</Button>
                 </S.InputFormWrapper>
             </S.Form >
             <S.SignupOptionWrapper>
